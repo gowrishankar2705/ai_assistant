@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Assistant</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🧠 AI Assistant</h1>
+        <button onclick="sendVoice()">🎙️ Speak</button>
+        <button onclick="sendCamera()">📷 Detect Objects</button>
+        <div id="output"></div>
+    </div>
+
+    <script>
+        function sendVoice() {
+            fetch('/voice', { method: 'POST' })
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('output').innerHTML = `<p><strong>You said:</strong> ${data.command}</p><p><strong>Assistant:</strong> ${data.response}</p>`;
+                    speak(data.response);
+                });
+        }
+
+        function sendCamera() {
+            fetch('/camera', { method: 'POST' })
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('output').innerHTML = `<p><strong>Assistant:</strong> ${data.response}</p>`;
+                    speak(data.response);
+                });
+        }
+
+        function speak(text) {
+            const msg = new SpeechSynthesisUtterance(text);
+            window.speechSynthesis.speak(msg);
+        }
+    </script>
+</body>
+</html>
